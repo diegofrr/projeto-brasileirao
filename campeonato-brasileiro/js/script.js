@@ -126,12 +126,19 @@ async function getLivescore(url) {
             let andamento = data.filter(e => e.ds_status == 'Em Andamento');
             let finalizadas = data.filter(e => e.ds_status == 'Finalizado');
             let acontecer = data.filter(e => e.ds_status == '');
+            acontecer = verificaData(acontecer);
             if (andamento.length < 1 && finalizadas.length < 1 && acontecer.length < 1) {
                 tabelaPartidas.style.display = 'none'; 
                 return;
             }
             formataPartidasHTML(andamento, finalizadas, acontecer)
         })
+}
+
+
+function verificaData(jogosAcontecer) {
+    let dataAtual = new Date().toLocaleDateString().slice(0, 5);
+    return jogosAcontecer.filter(jogo => jogo.data == dataAtual)
 }
 
 function formataBlocoPartidasHTML(partida) {
@@ -167,7 +174,6 @@ function formataPartidasHTML(andamento, finalizadas, acontecer) {
     finalizadasBlock.innerHTML = '<h4>Finalizadas</h4>'
     acontecerblock.innerHTML = '<h4>Ainda vai rolar</h4>'
     andamento.forEach(partida => {
-        console.log(andamento)
         andamentoBlock.classList.remove('hidden');
         andamentoBlock.innerHTML +=  formataBlocoPartidasHTML(partida)
     });
